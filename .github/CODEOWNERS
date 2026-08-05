@@ -1,0 +1,6 @@
+# Locked paths. Org review required, which is a second signal alongside the
+# platform-side blob SHA comparison.
+/.github/workflows/   @def-academy/instructors
+/milestones/*/milestone.yaml   @def-academy/instructors
+/schemas/             @def-academy/instructors
+/.academy/            @def-academy/instructors

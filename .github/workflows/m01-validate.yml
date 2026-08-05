@@ -1,0 +1,27 @@
+# INTEGRITY-LOCKED FILE. Do not edit.
+# The platform diffs this blob against the template SHA on every workflow_run.
+# It also resolves referenced_workflows[] server-side and asserts the validator
+# SHA is on the org allowlist. Editing this file fails integrity, it does not
+# bypass grading.
+name: cti-m01 validate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+concurrency:
+  group: cti-m01-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: contains(github.event.pull_request.labels.*.name, 'submit:m01')
+    uses: def-academy/validators/.github/workflows/cti-m01.yml@v1.0.0
+    with:
+      milestone_id: cti-m01
+      contract_path: milestones/m01-foundation/milestone.yaml

@@ -1,0 +1,22 @@
+# M01 DELIVERABLE. This is a starting point, not the answer.
+# The validator checks that ruff, mypy and gitleaks are present.
+# It does NOT check your hook ordering, args, or exclusions. Those are yours
+# to justify in the defense session.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-PyYAML, types-requests]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.1
+    hooks:
+      - id: gitleaks

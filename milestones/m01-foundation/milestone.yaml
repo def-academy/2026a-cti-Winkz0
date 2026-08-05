@@ -1,0 +1,85 @@
+# INTEGRITY-LOCKED FILE
+# The hash of this file is registered platform-side at enrollment.
+# Editing it moves the milestone to INTEGRITY_HOLD. Open an issue instead.
+apiVersion: academy/v1
+kind: MilestoneContract
+
+metadata:
+  id: cti-m01
+  course: cti
+  course_version: 1.0.0
+  title: Foundation and CI baseline
+  week: 1
+  effort_hours: 9
+
+spec:
+  depends_on: []
+  capstone_gate: true
+
+  validator:
+    repo: def-academy/validators
+    workflow: .github/workflows/cti-m01.yml
+    ref: v1.0.0
+
+  required_artifacts:
+    - path: docs/adr/0001-stack-selection.md
+      kind: adr
+      weight: 30
+      checks:
+        - exists
+        - min_words:300
+        - adr_has_section:Context
+        - adr_has_section:Decision
+        - adr_has_rejected_alternative
+        - not_template_boilerplate
+
+    - path: .pre-commit-config.yaml
+      kind: config
+      weight: 20
+      checks:
+        - exists
+        - yaml_valid
+        - precommit_has_hooks:ruff,mypy,gitleaks
+
+    - path: pyproject.toml
+      kind: config
+      weight: 10
+      checks:
+        - exists
+        - toml_valid
+        - pyproject_strict_mypy
+
+    - path: milestones/m01-foundation/RUNBOOK.md
+      kind: runbook
+      weight: 20
+      checks:
+        - exists
+        - min_words:200
+        - not_template_boilerplate
+        - runbook_has_section:Verification
+
+  required_checks:
+    - id: lint
+      weight: 5
+    - id: typecheck
+      weight: 5
+    - id: secret_scan
+      weight: 5
+    - id: signed_commits
+      weight: 5
+
+  integrity_signals:
+    - commit_cadence
+    - author_committer_match
+    - diff_entropy
+    - no_binary_over:2097152
+
+  defense:
+    required: true
+    min_score: 70
+    code_question: true
+    prompts:
+      - "You chose mypy strict. Name one place it will fight you in M4 when you build STIX objects, and how you plan to handle it."
+      - "Why did you reject the alternative documented in ADR-0001? Give the failure mode, not the preference."
+      - "gitleaks runs in pre-commit AND in CI. Argue the duplication is not redundant."
+      - "Open your own .pre-commit-config.yaml. Which hook runs first, and why does the order matter?"

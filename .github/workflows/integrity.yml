@@ -1,0 +1,19 @@
+# INTEGRITY-LOCKED FILE. Do not edit.
+# Fast local feedback only. The authoritative integrity decision is made
+# platform-side from the workflow_run webhook. See platform/verify_workflow_run.py.
+name: integrity
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  integrity:
+    uses: def-academy/validators/.github/workflows/_integrity.yml@v1.0.0
+    with:
+      course: cti
+      course_version: 1.0.0
